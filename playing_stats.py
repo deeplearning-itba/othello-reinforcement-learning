@@ -23,7 +23,8 @@ class EvaluatePolicy():
         return indexes[np.random.choice(scores_indxs)]
 
     def policy_player(self, game, board):
-        board_str = game.stringRepresentation(board)
+        # board_str = game.stringRepresentation(board)
+        board_str = tuple(board.reshape(-1))
         return self.pi[board_str]
     
     def play_episode(self, game, board, players_policies):
@@ -31,7 +32,8 @@ class EvaluatePolicy():
         while game.getGameEnded(board, player) == 0:
             # Jugador 1
             board_cann = game.getCanonicalForm(board, player)
-            board_str = game.stringRepresentation(board_cann)
+            # board_str = game.stringRepresentation(board_cann)
+            board_str = tuple(board_cann.reshape(-1))
             action = players_policies[player](game, board_cann)
             board, player = game.getNextState(board, player, action)
         return board

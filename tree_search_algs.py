@@ -82,14 +82,14 @@ def bfs_depth(game, root, verbose=0):
     return cannonical_states
 
 def bfs_cannonical(game, root):
-    state_str = game.stringRepresentation(root)
+    state_str = tuple(root.reshape(-1))
     seen = set([])
     cannonical_states = {}
     # deque es como una pila pero con doble entrada (rear-front)
     queue = collections.deque([state_str])
     while queue:
         vertex = queue.popleft()
-        state = np.frombuffer(vertex, dtype=int).reshape(game.n, game.n)
+        state = np.array(vertex).reshape(game.n, game.n)
         valid_moves = np.array(game.getValidMoves(state, 1))
         valid_moves = np.where(valid_moves == 1)[0]
         if game.getGameEnded(state, 1) == 0:
@@ -98,7 +98,7 @@ def bfs_cannonical(game, root):
                 cannonical_states[vertex][action] = {}
                 next_state, next_player = game.getNextState(state, 1, action)
                 next_state = game.getCanonicalForm(next_state, -1)
-                node = game.stringRepresentation(next_state)
+                node = tuple(next_state.reshape(-1))
                 cannonical_states[vertex][action]['reward'] = game.getGameEnded(next_state, 1)
                 cannonical_states[vertex][action]['next_node'] = node
                 if node not in seen:
