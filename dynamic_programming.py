@@ -105,6 +105,6 @@ def policy_iteration(states_actions, pi_old, verbose = 0):
                  policy_updates += 1
         pi_old = pi.copy()
         if verbose:
-            print('Cantidad de diferencias de la vieja politica con la nueva:', policy_updates)
+            print('Number of differences of new policy vs old policy:', policy_updates)
             print('---------------------------')
     return pi_old, V
