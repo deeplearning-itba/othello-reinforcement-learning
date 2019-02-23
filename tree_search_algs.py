@@ -81,8 +81,8 @@ def bfs_depth(game, root, verbose=0):
                     queue.append(node)
     return cannonical_states
 
-def bfs_cannonical(game, root):
-    state_str = tuple(root.reshape(-1))
+def bfs_cannonical(game, root, first_player):
+    state_str = tuple(first_player * root.reshape(-1))
     seen = set([])
     cannonical_states = {}
     # deque es como una pila pero con doble entrada (rear-front)
