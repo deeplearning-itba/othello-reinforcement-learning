@@ -27,7 +27,7 @@ def stochastic_policy_eval_step(states_actions, V, pi):
         V_updated = 0
         for action, data in actions.items():
             next_node = data['next_node']
-            reward = data['reward']
+            reward = data['winner']
             prob = pi[state][action]
             if reward == 0:
                 V_updated = V_updated + prob*(- V[next_node])
@@ -47,7 +47,7 @@ def deterministic_policy_eval_step(states_actions, V, pi):
         V_updated = 0
         action = pi[state]
         next_node = actions[action]['next_node']
-        reward = actions[action]['reward']
+        reward = actions[action]['winner']
         if reward == 0:
             V_updated = V_updated + (-V[next_node])
         else:
@@ -81,7 +81,7 @@ def policy_improve(V, states_actions):
         expected_rewards = np.zeros(len(actions_list))
         for i, (action, data) in enumerate(actions.items()):
             next_state = data['next_node']
-            reward = data['reward']
+            reward = data['winner']
             if reward == 0:
                 expected_rewards[i] = - V[next_state]
             else:
@@ -90,7 +90,7 @@ def policy_improve(V, states_actions):
         pi[state] = actions_list[np.argmax(expected_rewards)]
     return pi
 
-def policy_iteration(states_actions, pi_old, verbose = 0):
+def policy_iteration(states_actions, pi_old, deterministic_policy_eval_step = deterministic_policy_eval_step, policy_improve=policy_improve, verbose = 0):
     # Politica inicial
     policy_updates = 100
     while policy_updates > 0:

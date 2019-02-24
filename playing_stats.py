@@ -29,6 +29,7 @@ class EvaluatePolicy():
     
     def play_episode(self, game, board, players_policies):
         player = 1
+        steps = 0
         while game.getGameEnded(board, player) == 0:
             # Jugador 1
             board_cann = game.getCanonicalForm(board, player)
@@ -36,19 +37,26 @@ class EvaluatePolicy():
             board_str = tuple(board_cann.reshape(-1))
             action = players_policies[player](game, board_cann)
             board, player = game.getNextState(board, player, action)
-        return board
+            steps += 1
+        return board, steps
     
     def get_stats(self, game, board, players_dict, episodes = 100):
         player_1_wins = 0
         player_2_wins = 0
         ties = 0
+        margins = []
+        steps_array = []
+        pieces = []
         for i in range(episodes):
-            last_board = self.play_episode(game, board, players_dict)
-            diff = last_board.sum()
-            if diff > 0:
+            last_board, steps = self.play_episode(game, board, players_dict)
+            steps_array.append(steps)
+            margin = last_board.sum()
+            pieces.append(np.abs(last_board).sum())
+            margins.append(margin)
+            if margin > 0:
                 player_1_wins = player_1_wins + 1
-            if diff < 0:
+            if margin < 0:
                 player_2_wins = player_2_wins + 1
-            if diff == 0:
+            if margin == 0:
                 ties = ties + 1   
-        return player_1_wins, player_2_wins, ties
+        return player_1_wins, player_2_wins, ties, np.array(margins), np.array(steps_array), np.array(pieces) 

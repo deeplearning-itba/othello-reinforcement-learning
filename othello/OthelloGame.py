@@ -62,7 +62,7 @@ class OthelloGame(Game):
         elif diff < 0:
             return -1
         # draw case
-        return -0.2
+        return 1e-6 # -0.2
 
     def getCanonicalForm(self, board, player):
         # return state if player==1, else return -state if player==-1

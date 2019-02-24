@@ -99,7 +99,8 @@ def bfs_cannonical(game, root, first_player=1):
                 next_state, next_player = game.getNextState(state, 1, action)
                 next_state = game.getCanonicalForm(next_state, -1)
                 node = tuple(next_state.reshape(-1))
-                cannonical_states[vertex][action]['reward'] = game.getGameEnded(next_state, 1)
+                cannonical_states[vertex][action]['winner'] = game.getGameEnded(next_state, 1) # * np.abs(next_state.sum())
+                # cannonical_states[vertex][action]['pieces'] = (next_state**2).sum()
                 cannonical_states[vertex][action]['next_node'] = node
                 if node not in seen:
                     seen.add(node)
