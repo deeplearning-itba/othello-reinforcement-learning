@@ -1,8 +1,9 @@
 import numpy as np
 
 class EvaluatePolicy():
-    def __init__(self, pi):
+    def __init__(self, pi, pi2=None):
         self.pi = pi
+        self.pi2 = pi2
         
     def random_player(self, game, board):
         valid_modes = game.getValidMoves(board, 1)
@@ -26,6 +27,11 @@ class EvaluatePolicy():
         # board_str = game.stringRepresentation(board)
         board_str = tuple(board.reshape(-1))
         return self.pi[board_str]
+    
+    def policy_player_pi2(self, game, board):
+        # board_str = game.stringRepresentation(board)
+        board_str = tuple(board.reshape(-1))
+        return self.pi2[board_str]
     
     def play_episode(self, game, board, players_policies):
         player = 1
