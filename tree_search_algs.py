@@ -105,5 +105,12 @@ def bfs_cannonical(game, root, first_player=1):
                 if node not in seen:
                     seen.add(node)
                     queue.append(node)
+#         else:
+#             # Terminal nodes
+#             cannonical_states[vertex] = {}
+#             cannonical_states[vertex][action] = {}
+#             cannonical_states[vertex][action]['next_node'] = vertex
+#             cannonical_states[vertex][action]['winner'] = 0
+            
         
     return cannonical_states

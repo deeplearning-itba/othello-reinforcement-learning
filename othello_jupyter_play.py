@@ -3,7 +3,7 @@ from othello.OthelloGame import OthelloGame as Game
 from matplotlib import pyplot as plt
 
 class Play_Othello:
-    def __init__(self, n=4, first_player = 1, board=None):
+    def __init__(self, n=4, first_player = 1, board=None, figsize = (3, 3), policy= None, value_func=None):
         self.game = Game(n)
         if board is None:
             self.board = self.game.getInitBoard()
@@ -13,18 +13,20 @@ class Play_Othello:
                 return
             else:
                 self.board = board
+        self.figsize = figsize
         self.n = self.board.shape[0]
-        self.figure, self.ax = plt.subplots(1, 1, figsize = (3, 3), num='Othello for Jupyter lab')
+        self.figure, self.ax = plt.subplots(1, 1, figsize = self.figsize, num='Othello for Jupyter lab')
         self.figure.patch.set_facecolor('lightgray')
         self.text = self.ax.text(-1,-1, "", va="bottom", ha="left")
         self.player = first_player
+        self.value_func = value_func
         
         display_board(self.game, 
                       self.board, 
                       player_turn= self.player, 
                       valid_moves = self.game.getValidMoves(self.board, self.player), 
-                      figsize = (3, 3), 
-                      ax = self.ax)
+                      figsize = self.figsize, 
+                      ax = self.ax, value_func = self.value_func)
         self.connect()
         self.text.set_text('Comenzado')
         
@@ -48,8 +50,8 @@ class Play_Othello:
                           self.board, 
                           player_turn= self.player, 
                           valid_moves = self.game.getValidMoves(self.board, self.player), 
-                          figsize = (3, 3), 
-                          ax = self.ax)
+                          figsize = self.figsize, 
+                          ax = self.ax, value_func=self.value_func)
             self.text.set_text('')
             ended = self.game.getGameEnded(self.board, self.player)
             if ended==0 and self.game.getValidMoves(self.board, self.player)[self.n*self.n] == 1:
@@ -59,8 +61,8 @@ class Play_Othello:
                               self.board, 
                               player_turn= self.player, 
                               valid_moves = self.game.getValidMoves(self.board, self.player), 
-                              figsize = (3, 3), 
-                              ax = self.ax)
+                              figsize = self.figsize, 
+                              ax = self.ax, value_func = self.value_func)
                 ended = self.game.getGameEnded(self.board, self.player)
             if ended!=0:
                 self.text.set_text('Terminado')

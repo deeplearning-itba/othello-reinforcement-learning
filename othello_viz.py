@@ -15,7 +15,7 @@ def plot_episode(game, states, initial_player=1):
             display_board(game, states[i] * player_turn, player_turn = player_turn, ax = ax)
             player_turn = -1 * player_turn
 
-def display_board(game, board, player_turn= None, valid_moves = None, figsize = (3, 3), ax = None):
+def display_board(game, board, player_turn= None, valid_moves = None, figsize = (3, 3), ax = None, value_func=None):
     """(1 for white, -1 for black, 0 for empty spaces)"""
     ny, nx = board.shape
     if ax is None:
@@ -34,7 +34,25 @@ def display_board(game, board, player_turn= None, valid_moves = None, figsize = 
         else:
             ax.set_title('Juega negro')
     if valid_moves is not None:
-        board = board + 10*valid_moves[:ny*nx].reshape([ny,nx])
+        valid_moves_array = valid_moves[:ny*nx].reshape([ny,nx])[::-1].T
+    value_data = []
+    not_valid_value = 31415
+    if value_func and valid_moves is not None:
+        for action, move in enumerate(valid_moves[:-1]):
+            if move == 1:
+                next_board, next_player_turn = game.getNextState(board, player_turn, action)
+                next_board = game.getCanonicalForm(next_board, next_player_turn)
+                if game.getGameEnded(next_board, 1) != 0:
+                    # Juego termina
+                    value_data.append(-value_func[tuple(game.getCanonicalForm(board, player_turn).reshape(-1))])
+                elif tuple(next_board.reshape(-1)) in value_func:
+                    value_data.append(-value_func[tuple(next_board.reshape(-1))])
+                else:
+                    print('It should not enter here. Check bug!')
+                    value_data.append(0)
+            else:
+                value_data.append(not_valid_value)
+        value_data_array = np.array(value_data).reshape([ny,nx])[::-1].T  
     for j, row in enumerate(board):
         for i, player in enumerate(row):
             ypos = ny - j - 1
@@ -48,9 +66,12 @@ def display_board(game, board, player_turn= None, valid_moves = None, figsize = 
             elif player == 0:
                 circle = patches.Circle([xpos, ypos], radius, color='gray', alpha=0.1)
                 ax.add_patch(circle)
-            elif player == 10:
+            if valid_moves is not None and valid_moves_array[xpos, ypos] == 1:
                 circle = patches.Circle([xpos, ypos], radius, color='gray', alpha=0.1)
                 ax.add_patch(circle)
+                if value_func is not None and value_data_array[xpos, ypos]!=not_valid_value:
+                    text = ax.text(xpos, ypos, "", va="bottom", ha="left")
+                    text.set_text(value_data_array[xpos, ypos])
                 circle = patches.Circle([xpos, ypos], 
                                         radius, 
                                         fill = False,
