@@ -22,6 +22,7 @@ def bfs_depth(game, root, verbose=0):
             queue.append('level_end')
             vertex = queue.popleft()   
             if verbose == 1:
+                print()
                 print('Profundidad:', depth)
                 print('Estados hasta el momento:', cannonical_states)
                 time1 = time.time()
@@ -34,12 +35,13 @@ def bfs_depth(game, root, verbose=0):
         valid_moves = np.where(valid_moves == 1)[0]
         if game.getGameEnded(state, player) == 0:
             for action in valid_moves:
-                cannonical_states = cannonical_states + 1
                 next_state, _ = game.getNextState(state, player, action)
                 node = tuple(next_state.reshape(-1))
                 if (node, player) not in seen:
+                    cannonical_states = cannonical_states + 1
                     seen.add((node, player))
                     queue.append(node)
+                    print('\rseen:', len(seen), end='')
     return cannonical_states
 
 n = 6
