@@ -24,15 +24,15 @@ def display_board(game, board, player_turn= None, valid_moves = None, figsize = 
     radius = 0.4
     if player_turn:
         if game.getGameEnded(board, 1) == 1:
-            ax.set_title('Gano Blanco')
+            ax.set_title('White Wins')
         elif game.getGameEnded(board, -1) == 1:
-            ax.set_title('Gano Negro')
+            ax.set_title('Black Wins')
         elif game.getGameEnded(board, -1) == -0.2:
-            ax.set_title('Empate')
+            ax.set_title('Tie')
         elif player_turn == 1:
-            ax.set_title('Juega blanco')
+            ax.set_title('White Plays')
         else:
-            ax.set_title('Juega negro')
+            ax.set_title('Black Plays')
     if valid_moves is not None:
         valid_moves_array = valid_moves[:ny*nx].reshape([ny,nx])[::-1].T
     value_data = []
@@ -43,7 +43,7 @@ def display_board(game, board, player_turn= None, valid_moves = None, figsize = 
                 next_board, next_player_turn = game.getNextState(board, player_turn, action)
                 next_board = game.getCanonicalForm(next_board, next_player_turn)
                 if game.getGameEnded(next_board, 1) != 0:
-                    # Juego termina
+                    # Game Ends!
                     value_data.append(-value_func[tuple(game.getCanonicalForm(board, player_turn).reshape(-1))])
                 elif tuple(next_board.reshape(-1)) in value_func:
                     value_data.append(-value_func[tuple(next_board.reshape(-1))])

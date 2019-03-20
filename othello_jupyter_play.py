@@ -28,7 +28,7 @@ class Play_Othello:
                       figsize = self.figsize, 
                       ax = self.ax, value_func = self.value_func)
         self.connect()
-        self.text.set_text('Comenzado')
+        self.text.set_text('Started')
         
     def connect(self):
         self.figure.canvas.mpl_connect('button_press_event', self.onclick)
@@ -65,7 +65,7 @@ class Play_Othello:
                               ax = self.ax, value_func = self.value_func)
                 ended = self.game.getGameEnded(self.board, self.player)
             if ended!=0:
-                self.text.set_text('Terminado')
+                self.text.set_text('Game Ended')
         else:
             # tx = 'action=%d, xdata=%f, ydata=%f' % (action, x, y)
             self.text.set_text('Invalid move: ' + str(action))
