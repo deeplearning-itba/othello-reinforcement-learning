@@ -7,9 +7,10 @@ def plot_episode(game, states, initial_player=1):
     cols = 6
     rows = int(np.ceil(len(states)/cols))
     f, axs = plt.subplots(rows, cols, figsize = (cols*3, 3*rows))
+    axs = axs.flatten()
     f.patch.set_facecolor('lightgray')
     for i in range(cols*rows):
-        ax = axs[int(i/cols), i%cols]
+        ax = axs[i]
         ax.axis('off')
         if i<len(states):
             display_board(game, states[i] * player_turn, player_turn = player_turn, ax = ax)
